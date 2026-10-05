@@ -1,0 +1,16 @@
+<section class="container section" data-reveal>
+  <div class="newsletter card">
+    <div>
+      <h2>Join our newsletter</h2>
+      <p>Early access to deals and new arrivals. No spam, unsubscribe anytime.</p>
+    </div>
+    <form method="post" action="{{ url_for('main.newsletter') }}" class="newsletter-form">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="next" value="{{ request.path }}">
+      <label class="visually-hidden" for="newsletter-email">Email address</label>
+      <input id="newsletter-email" class="input" type="email" name="email" required maxlength="255"
+             placeholder="you@example.com" autocomplete="email">
+      <button class="btn btn-primary" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>

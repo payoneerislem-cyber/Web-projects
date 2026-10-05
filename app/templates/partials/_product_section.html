@@ -1,0 +1,15 @@
+{% from "partials/_icons.html" import icon %}
+{% from "partials/_product_card.html" import product_card %}
+{% macro product_section(eyebrow, title, items, link_url=None) %}
+{% if items %}
+<section class="container section" data-reveal>
+  <div class="section-head">
+    <div><p class="eyebrow">{{ eyebrow }}</p><h2>{{ title }}</h2></div>
+    {% if link_url %}<a class="btn btn-ghost btn-sm" href="{{ link_url }}">View all {{ icon('arrow-right', 16) }}</a>{% endif %}
+  </div>
+  <div class="product-grid">
+    {% for p in items %}{{ product_card(p) }}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endmacro %}

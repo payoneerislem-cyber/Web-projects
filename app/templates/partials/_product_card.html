@@ -1,0 +1,46 @@
+{% from "partials/_icons.html" import icon %}
+
+{% macro stars(value) -%}
+<span class="stars" role="img" aria-label="Rated {{ '%.1f'|format(value or 0) }} out of 5">
+  {%- for i in range(1, 6) -%}
+    {{ icon('star', 14, 'star is-filled' if (value or 0) >= i - 0.5 else 'star') }}
+  {%- endfor -%}
+</span>
+{%- endmacro %}
+
+{# p: a Product (or any mapping with the same fields) #}
+{% macro product_card(p) %}
+{% set url = safe_url('shop.product', '/product/' ~ p.slug, slug=p.slug) %}
+{% set out_of_stock = p.stock_status == 'out_of_stock' %}
+<article class="product-card" data-product-id="{{ p.id }}">
+  <a class="pc-media" href="{{ url }}" tabindex="-1" aria-hidden="true">
+    {% if p.image_url %}
+      <img src="{{ p.image_url }}" alt="" loading="lazy" width="400" height="400">
+    {% else %}
+      <span class="media-placeholder">{{ icon('bag', 40) }}</span>
+    {% endif %}
+  </a>
+  <div class="pc-badges">
+    {% if p.discount_percent %}<span class="badge badge-danger">-{{ p.discount_percent }}%</span>{% endif %}
+    {% if p.is_new %}<span class="badge badge-primary">New</span>{% endif %}
+    {% if out_of_stock %}<span class="badge">Sold out</span>{% endif %}
+  </div>
+  <button type="button" class="icon-btn pc-wish" data-wishlist-toggle data-product-id="{{ p.id }}"
+          aria-pressed="false" aria-label="Add {{ p.name }} to wishlist">{{ icon('heart', 18) }}</button>
+  <div class="pc-body">
+    {% if p.brand %}<p class="pc-brand">{{ p.brand }}</p>{% endif %}
+    <h3 class="pc-title"><a href="{{ url }}">{{ p.name }}</a></h3>
+    <div class="pc-rating">{{ stars(p.avg_rating) }}<span>({{ p.review_count or 0 }})</span></div>
+    <p class="price">
+      <span class="price-now">{{ p.price|money }}</span>
+      {% if p.compare_at_price and p.compare_at_price > p.price %}<s class="price-old">{{ p.compare_at_price|money }}</s>{% endif %}
+    </p>
+  </div>
+  <div class="pc-actions">
+    <button type="button" class="btn btn-secondary btn-sm btn-block" data-add-to-cart data-product-id="{{ p.id }}"
+            {% if out_of_stock %}disabled{% endif %}>
+      {{ icon('bag', 16) }} {{ 'Sold out' if out_of_stock else 'Add to cart' }}
+    </button>
+  </div>
+</article>
+{% endmacro %}

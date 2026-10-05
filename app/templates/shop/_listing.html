@@ -1,0 +1,22 @@
+{% from "partials/_icons.html" import icon %}
+{% from "partials/_product_card.html" import product_card %}
+{% from "partials/_pagination.html" import render_pagination %}
+{% if products.items %}
+  <div class="product-grid">
+    {% for p in products.items %}{{ product_card(p) }}{% endfor %}
+  </div>
+  {{ render_pagination(products, pagination_endpoint, pagination_args) }}
+{% else %}
+  <div class="empty-state card">
+    <div class="empty-icon">{{ icon('search', 32) }}</div>
+    {% if active_count %}
+      <h2>No products match your filters</h2>
+      <p>Try removing a filter or widening the price range.</p>
+      <div class="cluster"><a class="btn btn-primary" href="{{ clear_url }}">Clear filters</a></div>
+    {% else %}
+      <h2>No products here yet</h2>
+      <p>Check back soon, or browse the rest of the store.</p>
+      <div class="cluster"><a class="btn btn-primary" href="{{ url_for('main.index') }}">Back to home</a></div>
+    {% endif %}
+  </div>
+{% endif %}

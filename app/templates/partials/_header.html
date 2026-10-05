@@ -1,0 +1,142 @@
+{% from "partials/_icons.html" import icon %}
+{% set shop_url = safe_url('shop.index', '/shop') %}
+{% set search_url = safe_url('shop.search', '/search') %}
+{% set cart_url = safe_url('cart.view', '/cart') %}
+{% set wishlist_url = safe_url('account.wishlist', '/account/wishlist') %}
+
+{% if ANNOUNCEMENT %}
+<div class="announcement">
+  <div class="container announcement-inner">
+    <p>{{ ANNOUNCEMENT }}</p>
+    <button type="button" class="icon-btn icon-btn-sm" data-announcement-close aria-label="Dismiss announcement">{{ icon('x', 16) }}</button>
+  </div>
+</div>
+{% endif %}
+
+<header class="site-header" id="site-header">
+  <div class="container header-inner">
+    <button type="button" class="icon-btn nav-toggle" data-drawer-open aria-label="Open menu"
+            aria-controls="mobile-drawer" aria-expanded="false">{{ icon('menu') }}</button>
+
+    <a class="brand" href="{{ url_for('main.index') }}" aria-label="{{ STORE_NAME }} home">
+      <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M11 9v14h10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>{{ STORE_NAME }}</span>
+    </a>
+
+    <nav class="primary-nav" aria-label="Primary">
+      <a class="nav-link{% if request.path == '/' %} is-active{% endif %}" href="{{ url_for('main.index') }}">Home</a>
+      <a class="nav-link{% if request.path.startswith('/shop') %} is-active{% endif %}" href="{{ shop_url }}">Shop</a>
+      <details class="dropdown" data-dropdown>
+        <summary class="nav-link">Categories {{ icon('chevron-down', 16, 'icon-chevron') }}</summary>
+        <div class="dropdown-menu">
+          {% for c in nav_categories %}
+            <a href="{{ safe_url('shop.category', '/category/' ~ c.slug, slug=c.slug) }}">{{ c.name }}</a>
+          {% else %}
+            <span class="dropdown-empty">No categories yet</span>
+          {% endfor %}
+          <a class="dropdown-all" href="{{ shop_url }}">View all products</a>
+        </div>
+      </details>
+    </nav>
+
+    <form class="search-field search-desktop" action="{{ search_url }}" method="get" role="search">
+      <label for="header-search" class="visually-hidden">Search products</label>
+      <span class="search-icon">{{ icon('search', 18) }}</span>
+      <input id="header-search" class="search-input" type="search" name="q" maxlength="100"
+             placeholder="Search products…" autocomplete="off"
+             value="{{ request.args.get('q', '') if request.path == '/search' else '' }}">
+    </form>
+
+    <div class="header-actions">
+      <button type="button" class="icon-btn search-toggle" data-search-toggle aria-label="Search"
+              aria-expanded="false" aria-controls="mobile-search">{{ icon('search') }}</button>
+
+      <button type="button" class="icon-btn hide-sm" data-theme-toggle aria-label="Toggle dark mode" aria-pressed="false">
+        {{ icon('moon', 20, 'icon-moon') }}{{ icon('sun', 20, 'icon-sun') }}
+      </button>
+
+      <a class="icon-btn hide-sm" href="{{ wishlist_url }}" aria-label="Wishlist">
+        {{ icon('heart') }}<span class="count-badge" data-badge="wishlist"{% if not wishlist_count %} hidden{% endif %}>{{ wishlist_count }}</span>
+      </a>
+
+      {% if current_user.is_authenticated %}
+      <details class="dropdown dropdown-right" data-dropdown>
+        <summary class="icon-btn" aria-label="Account menu">{{ icon('user') }}</summary>
+        <div class="dropdown-menu">
+          <p class="dropdown-head"><strong>{{ current_user.name }}</strong><small>{{ current_user.email }}</small></p>
+          <a href="{{ url_for('account.dashboard') }}">My account</a>
+          <a href="{{ safe_url('account.orders', '/account/orders') }}">My orders</a>
+          <a href="{{ wishlist_url }}">Wishlist</a>
+          {% if current_user.is_admin %}<a href="{{ url_for('admin.dashboard') }}">Admin panel</a>{% endif %}
+          <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="dropdown-item">Log out</button>
+          </form>
+        </div>
+      </details>
+      {% else %}
+      <a class="icon-btn" href="{{ url_for('auth.login') }}" aria-label="Log in">{{ icon('user') }}</a>
+      {% endif %}
+
+      <a class="icon-btn" href="{{ cart_url }}" aria-label="Cart">
+        {{ icon('bag') }}<span class="count-badge" data-badge="cart"{% if not cart_count %} hidden{% endif %}>{{ cart_count }}</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="mobile-search" id="mobile-search">
+    <form class="search-field" action="{{ search_url }}" method="get" role="search">
+      <label for="mobile-search-input" class="visually-hidden">Search products</label>
+      <span class="search-icon">{{ icon('search', 18) }}</span>
+      <input id="mobile-search-input" class="search-input" type="search" name="q" maxlength="100"
+             placeholder="Search products…" autocomplete="off">
+    </form>
+  </div>
+</header>
+
+<div class="drawer" id="mobile-drawer" aria-hidden="true">
+  <div class="drawer-overlay" data-drawer-close></div>
+  <nav class="drawer-panel" aria-label="Mobile menu">
+    <div class="drawer-head">
+      <span class="brand">{{ STORE_NAME }}</span>
+      <button type="button" class="icon-btn drawer-close" data-drawer-close aria-label="Close menu">{{ icon('x') }}</button>
+    </div>
+    <div class="drawer-section">
+      <ul class="drawer-links">
+        <li><a href="{{ url_for('main.index') }}">{{ icon('home', 20) }} Home</a></li>
+        <li><a href="{{ shop_url }}">{{ icon('bag', 20) }} Shop</a></li>
+        <li><a href="{{ wishlist_url }}">{{ icon('heart', 20) }} Wishlist</a></li>
+      </ul>
+    </div>
+    {% if nav_categories %}
+    <div class="drawer-section">
+      <h2>Categories</h2>
+      <ul class="drawer-links">
+        {% for c in nav_categories %}
+        <li><a href="{{ safe_url('shop.category', '/category/' ~ c.slug, slug=c.slug) }}">{{ c.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+    <div class="drawer-section">
+      <h2>Account</h2>
+      <ul class="drawer-links">
+        {% if current_user.is_authenticated %}
+          <li><a href="{{ url_for('account.dashboard') }}">{{ icon('user', 20) }} My account</a></li>
+          <li><a href="{{ safe_url('account.orders', '/account/orders') }}">{{ icon('package', 20) }} My orders</a></li>
+          {% if current_user.is_admin %}<li><a href="{{ url_for('admin.dashboard') }}">{{ icon('shield', 20) }} Admin panel</a></li>{% endif %}
+          <li>
+            <form method="post" action="{{ url_for('auth.logout') }}" class="inline-form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit">{{ icon('log-out', 20) }} Log out</button>
+            </form>
+          </li>
+        {% else %}
+          <li><a href="{{ url_for('auth.login') }}">{{ icon('user', 20) }} Log in</a></li>
+          <li><a href="{{ url_for('auth.register') }}">{{ icon('check', 20) }} Create account</a></li>
+        {% endif %}
+        <li><button type="button" data-theme-toggle aria-pressed="false">{{ icon('moon', 20, 'icon-moon') }}{{ icon('sun', 20, 'icon-sun') }} Dark / light mode</button></li>
+      </ul>
+    </div>
+  </nav>
+</div>
