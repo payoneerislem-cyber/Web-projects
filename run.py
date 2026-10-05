@@ -1,5 +1,5 @@
 """Entry point: `python run.py` or `flask --app run run --debug`."""
-from app import create_app
+from app import create_app, db
 
 app = create_app()
 with app.app_context():
