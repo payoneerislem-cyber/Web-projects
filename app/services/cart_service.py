@@ -44,7 +44,7 @@ def _to_int(value, message: str) -> int:
         raise CartError(message)
     if isinstance(value, int):
         return value
-    if isinstance(value, str) and value.strip().isdigit():
+    if isinstance(value, str) and value.strip().isdecimal():
         return int(value.strip())
     raise CartError(message)
 

@@ -266,3 +266,8 @@ ul.pagination { list-style: none; margin: var(--space-6) 0 0; padding: 0; }
 .sum-total dt { color: var(--text); font-weight: 700; }
 .sum-total dd { font-weight: 800; }
 .sum-note { display: flex; align-items: center; justify-content: center; gap: 6px; margin: var(--space-3) 0 0; font-size: var(--fs-xs); }
+
+/* ======================= Phase 8: wishlist ======================= */
+.product-card { transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), opacity .25s, scale .25s; }
+.product-card.is-removing { opacity: 0; scale: .95; pointer-events: none; }
+.pc-wish[aria-pressed="true"] { animation: bump .3s var(--ease); }

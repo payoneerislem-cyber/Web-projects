@@ -10,5 +10,3 @@ email-validator>=2.1,<3.0
 Pillow>=10.3
 itsdangerous>=2.2
 pytest>=8.0
-gunicorn
-

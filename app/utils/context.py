@@ -22,6 +22,11 @@ def safe_url(endpoint: str, fallback: str = "#", **values) -> str:
         return fallback
 
 
+def in_wishlist(product_id) -> bool:
+    """True if the logged-in visitor has wishlisted this product (used by product cards)."""
+    return product_id in _nav_data()["wishlist_ids"]
+
+
 def asset(filename: str) -> str:
     """Static URL with a ?v=<mtime> cache-buster so edits show up immediately."""
     try:
@@ -36,9 +41,9 @@ def _nav_data() -> dict:
     because error pages also render the header and must never crash."""
     if hasattr(g, "_nav_data"):
         return g._nav_data
-    data = {"nav_categories": [], "cart_count": 0, "wishlist_count": 0}
+    data = {"nav_categories": [], "cart_count": 0, "wishlist_count": 0, "wishlist_ids": set()}
     try:
-        from app.models import Cart, CartItem, Category, Wishlist, WishlistItem
+        from app.models import Cart, CartItem, Category
         from app.services.cart_service import CART_TOKEN_KEY
 
         data["nav_categories"] = (
@@ -59,12 +64,10 @@ def _nav_data() -> dict:
             ) or 0
 
         if current_user.is_authenticated:
-            data["wishlist_count"] = (
-                db.session.query(func.count(WishlistItem.id))
-                .join(Wishlist, Wishlist.id == WishlistItem.wishlist_id)
-                .filter(Wishlist.user_id == current_user.id)
-                .scalar()
-            ) or 0
+            from app.services import wishlist_service
+
+            data["wishlist_ids"] = wishlist_service.product_ids(current_user)
+            data["wishlist_count"] = len(data["wishlist_ids"])
     except SQLAlchemyError:
         db.session.rollback()
         current_app.logger.exception("Could not load header data")
@@ -75,7 +78,7 @@ def _nav_data() -> dict:
 def register_context(app) -> None:
     from datetime import datetime, timezone
 
-    app.jinja_env.globals.update(safe_url=safe_url, asset=asset)
+    app.jinja_env.globals.update(safe_url=safe_url, asset=asset, in_wishlist=in_wishlist)
 
     @app.context_processor
     def inject_globals():

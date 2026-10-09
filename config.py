@@ -37,6 +37,7 @@ class Config:
     CURRENCY_SYMBOL = "$"
     CURRENCY_CODE = "USD"
     MAX_QTY_PER_ITEM = 10  # per cart line
+    MAX_WISHLIST_ITEMS = 200
     FREE_SHIPPING_THRESHOLD = 5000  # cents: orders at or above this ship free
     SHIPPING_FLAT_RATE = 599  # cents
     TAX_RATE = os.environ.get("TAX_RATE", "0")  # e.g. 0.0825 for 8.25%; 0 disables tax

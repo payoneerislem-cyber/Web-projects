@@ -18,3 +18,14 @@ def validate_password_strength(password: str) -> list[str]:
     if not re.search(r"\d", password):
         errors.append("Include at least one number.")
     return errors
+
+
+def parse_int(value) -> int | None:
+    """Strict integer parsing for JSON/form input. Rejects bools, floats and odd digits."""
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        return value
+    if isinstance(value, str) and value.strip().isdecimal():
+        return int(value.strip())
+    return None

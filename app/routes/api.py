@@ -1,9 +1,11 @@
 """JSON endpoints used by the front-end (more are added in later phases)."""
 from flask import Blueprint, current_app, jsonify, request, url_for
+from flask_login import current_user, login_required
 
 from app.extensions import db, limiter
-from app.services import cart_service, catalog_service
+from app.services import cart_service, catalog_service, wishlist_service
 from app.services.cart_service import CartError
+from app.services.wishlist_service import WishlistError
 from app.utils.money import format_money
 
 bp = Blueprint("api", __name__, url_prefix="/api")
@@ -83,3 +85,50 @@ def cart_remove(item_id):
 def cart_clear():
     cart_service.clear_cart()
     return jsonify({"ok": True, "cart": cart_service.serialize(cart_service.get_cart())})
+
+
+# ---------------------------------------------------------------- wishlist (login required)
+def _wishlist_body() -> dict:
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        raise WishlistError("Invalid request.")
+    return data
+
+
+@bp.errorhandler(WishlistError)
+def wishlist_error(exc):
+    db.session.rollback()
+    return jsonify({"ok": False, "error": str(exc)}), exc.status
+
+
+@bp.post("/wishlist/toggle")
+@limiter.limit("120 per minute")
+@login_required
+def wishlist_toggle():
+    in_list = wishlist_service.toggle(current_user, _wishlist_body().get("product_id"))
+    return jsonify({
+        "ok": True, "in_wishlist": in_list,
+        "count": len(wishlist_service.product_ids(current_user)),
+        "message": "Added to your wishlist." if in_list else "Removed from your wishlist.",
+    })
+
+
+@bp.delete("/wishlist/<int:product_id>")
+@limiter.limit("120 per minute")
+@login_required
+def wishlist_remove(product_id):
+    wishlist_service.remove(current_user, product_id)
+    return jsonify({"ok": True, "count": len(wishlist_service.product_ids(current_user))})
+
+
+@bp.post("/wishlist/<int:product_id>/move-to-cart")
+@limiter.limit("120 per minute")
+@login_required
+def wishlist_move_to_cart(product_id):
+    product = wishlist_service.move_to_cart(current_user, product_id)
+    return jsonify({
+        "ok": True,
+        "message": f"Moved \u201c{product.name}\u201d to your cart.",
+        "count": len(wishlist_service.product_ids(current_user)),
+        "cart_count": cart_service.serialize(cart_service.get_cart())["count"],
+    })

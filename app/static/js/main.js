@@ -1,5 +1,6 @@
 /* Global behaviour: theme, header, drawer, dropdowns, toasts, modals, reveal. */
 import { initCart } from "./cart.js";
+import { initWishlist } from "./wishlist.js";
 import { initSearchSuggest } from "./search.js";
 import { confirmDialog, initCounters, initFlashToasts, initModals, initQuantityInputs, initReveal, showToast } from "./ui.js";
 
@@ -141,6 +142,7 @@ initReveal();
 initDataHooks();
 initSearchSuggest();
 initCart();
+initWishlist();
 initQuantityInputs();
 initCounters();
 

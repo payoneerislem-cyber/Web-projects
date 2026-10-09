@@ -80,7 +80,7 @@
         <button type="button" class="btn btn-primary btn-lg buy-main" data-add-to-cart data-product-id="{{ product.id }}"{% if max_qty == 0 %} disabled{% endif %}>
           {{ icon('bag', 18) }} {{ 'Sold out' if max_qty == 0 else 'Add to cart' }}
         </button>
-        <button type="button" class="icon-btn icon-btn-outline" data-wishlist-toggle data-product-id="{{ product.id }}" aria-pressed="false" aria-label="Add {{ product.name }} to wishlist">{{ icon('heart', 20) }}</button>
+        <button type="button" class="icon-btn icon-btn-outline" data-wishlist-toggle data-product-id="{{ product.id }}" data-name="{{ product.name }}" aria-pressed="{{ 'true' if in_wishlist(product.id) else 'false' }}" aria-label="{{ ('Remove ' ~ product.name ~ ' from wishlist') if in_wishlist(product.id) else ('Add ' ~ product.name ~ ' to wishlist') }}">{{ icon('heart', 20) }}</button>
       </div>
       {% if max_qty > 0 %}
       <button type="button" class="btn btn-secondary btn-lg btn-block" data-buy-now data-product-id="{{ product.id }}" data-redirect="{{ safe_url('checkout.index', safe_url('cart.view', '/cart')) }}">Buy now</button>
