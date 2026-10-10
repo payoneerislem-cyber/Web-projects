@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% block title %}FAQ &middot; {{ STORE_NAME }}{% endblock %}
+{% block meta_description %}Answers to common questions about shipping, returns, payments and your account at {{ STORE_NAME }}.{% endblock %}
+{% set questions = [
+  ('How long does delivery take?', 'Most orders are dispatched within 24 hours and arrive in 2 to 4 working days.'),
+  ('How much is shipping?', 'Shipping is free on orders over $50. Below that, a flat rate is shown at checkout before you pay.'),
+  ('What payment methods do you accept?', 'This demo store supports Cash on Delivery and a test payment method. No real card payments are taken.'),
+  ('Can I return a product?', 'Yes. You can return unused items within 30 days of delivery for a full refund.'),
+  ('How do I track my order?', 'Log in and open My orders. The status updates as your order is confirmed, shipped and delivered.'),
+  ('How do coupon codes work?', 'Enter your code in the cart or at checkout. Each code has its own conditions, such as a minimum order value or an expiry date.'),
+  ('Why is a product out of stock?', 'Popular items sell out quickly. Out-of-stock products cannot be ordered until they are restocked.'),
+  ('How is my data used?', 'We only use your details to process orders and support you. See our Privacy Policy for the full picture.'),
+] %}
+{% block content %}
+<div class="container section">
+  <div class="page-head">
+    <p class="eyebrow">Help centre</p>
+    <h1>Frequently asked questions</h1>
+    <p>Can't find your answer? <a href="{{ safe_url('main.contact', '/contact') }}">Contact us</a>.</p>
+  </div>
+  <div class="faq">
+    {% for question, answer in questions %}
+    <details>
+      <summary>{{ question }} {{ icon('chevron-down', 18) }}</summary>
+      <div class="answer"><p>{{ answer }}</p></div>
+    </details>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

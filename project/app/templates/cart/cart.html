@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% block title %}Shopping cart &middot; {{ STORE_NAME }}{% endblock %}
+{% block head_extra %}<meta name="robots" content="noindex, follow">{% endblock %}
+
+{% block content %}
+{% set shop_url = safe_url('shop.index', '/shop') %}
+<div class="container section" data-cart-page>
+  <div class="listing-head">
+    <h1>Shopping cart</h1>
+    {% if cart["items"] %}<p class="text-muted" data-cart-count>{{ cart.count }} item{{ '' if cart.count == 1 else 's' }}</p>{% endif %}
+  </div>
+
+  {% if cart["items"] %}
+  <div class="cart-layout">
+    <section aria-label="Cart items">
+      <ul class="cart-lines" data-cart-lines>
+        {% for item in cart["items"] %}
+        <li class="cart-line" data-item-id="{{ item.id }}" data-qty="{{ item.quantity }}">
+          <a class="cart-img" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+            {% if item.image %}<img src="{{ item.image }}" alt="" width="96" height="96" loading="lazy">{% else %}<span class="media-placeholder">{{ icon('bag', 28) }}</span>{% endif %}
+          </a>
+          <div class="cart-info">
+            <div class="cart-top">
+              <a class="cart-name" href="{{ item.url }}">{{ item.name }}</a>
+              <p class="cart-line-total" data-line-total>{{ item.line_total_formatted }}</p>
+            </div>
+            <p class="text-muted cart-unit">{% if item.brand %}{{ item.brand }} &middot; {% endif %}{{ item.unit_price_formatted }} each</p>
+            <p class="stock stock-low cart-note" data-stock-note{% if not item.stock_note %} hidden{% endif %}>{{ item.stock_note }}</p>
+            <div class="cart-controls">
+              <div class="qty" data-qty-box data-qty>
+                <button type="button" class="qty-btn" data-qty-minus aria-label="Decrease quantity of {{ item.name }}"{% if item.quantity <= 1 %} disabled{% endif %}>{{ icon('minus', 16) }}</button>
+                <input class="qty-input" type="number" value="{{ item.quantity }}" min="1" max="{{ item.max_quantity }}" inputmode="numeric" data-qty-input aria-label="Quantity of {{ item.name }}">
+                <button type="button" class="qty-btn" data-qty-plus aria-label="Increase quantity of {{ item.name }}"{% if item.quantity >= item.max_quantity %} disabled{% endif %}>{{ icon('plus', 16) }}</button>
+              </div>
+              <button type="button" class="btn btn-ghost btn-sm" data-remove-item aria-label="Remove {{ item.name }} from cart">{{ icon('trash', 16) }} Remove</button>
+            </div>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="cluster">
+        <a class="btn btn-secondary" href="{{ shop_url }}">Continue shopping</a>
+        <button type="button" class="btn btn-ghost" data-clear-cart>{{ icon('trash', 16) }} Clear cart</button>
+      </div>
+    </section>
+
+    <aside class="cart-summary card" aria-label="Order summary" aria-live="polite">
+      <h2>Order summary</h2>
+      <div class="ship-progress">
+        <p data-ship-msg>{% if cart.free_shipping_remaining > 0 %}Add {{ cart.free_shipping_remaining_formatted }} more for free shipping{% else %}You've unlocked free shipping{% endif %}</p>
+        <progress class="bar bar-primary" value="{{ [cart.subtotal - cart.discount, cart.free_shipping_threshold]|min }}" max="{{ cart.free_shipping_threshold }}" data-ship-progress aria-label="Progress to free shipping"></progress>
+      </div>
+      <dl class="sum-list">
+        <div class="sum-row"><dt>Subtotal</dt><dd data-sum="subtotal">{{ cart.formatted.subtotal }}</dd></div>
+        <div class="sum-row" data-row="discount"{% if not cart.discount %} hidden{% endif %}><dt>Discount</dt><dd data-sum="discount">{{ cart.formatted.discount }}</dd></div>
+        <div class="sum-row"><dt>Shipping</dt><dd data-sum="shipping">{{ cart.formatted.shipping }}</dd></div>
+        <div class="sum-row" data-row="tax"{% if not cart.tax %} hidden{% endif %}><dt>Tax</dt><dd data-sum="tax">{{ cart.formatted.tax }}</dd></div>
+        <div class="sum-row sum-total"><dt>Total</dt><dd data-sum="total">{{ cart.formatted.total }}</dd></div>
+      </dl>
+      <a class="btn btn-primary btn-lg btn-block" href="{{ safe_url('checkout.index', '/checkout') }}">Checkout {{ icon('arrow-right', 18) }}</a>
+      <p class="text-muted sum-note">{{ icon('shield', 14) }} Secure checkout &middot; 30-day returns</p>
+    </aside>
+  </div>
+  {% else %}
+  <div class="empty-state card">
+    <div class="empty-icon">{{ icon('bag', 32) }}</div>
+    <h2>Your cart is empty</h2>
+    <p>Looks like you haven't added anything yet. Browse the store and find something you'll love.</p>
+    <div class="cluster"><a class="btn btn-primary btn-lg" href="{{ shop_url }}">Start shopping</a></div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% from "partials/_product_card.html" import stars %}
+{% from "partials/_product_section.html" import product_section %}
+{% block title %}{{ product.name }} &middot; {{ STORE_NAME }}{% endblock %}
+{% block meta_description %}{{ product.short_description or product.name }}{% endblock %}
+{% block head_extra %}
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ product.name }}">
+  <meta property="og:description" content="{{ product.short_description or product.name }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  {% if og_image %}<meta property="og:image" content="{{ og_image }}">{% endif %}
+  <script type="application/ld+json">{{ json_ld|tojson }}</script>
+{% endblock %}
+
+{% block content %}
+{% set stock = product.stock_status %}
+<div class="container section product-page">
+  <ol class="breadcrumbs">
+    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li><a href="{{ url_for('shop.index') }}">Shop</a></li>
+    <li><a href="{{ url_for('shop.category', slug=product.category.slug) }}">{{ product.category.name }}</a></li>
+    <li aria-current="page">{{ product.name }}</li>
+  </ol>
+
+  <div class="product-layout">
+    <div class="gallery" data-gallery>
+      <button type="button" class="gallery-main" data-gallery-main aria-label="Open larger image">
+        {% if gallery %}
+          <img src="{{ gallery[0].url }}" alt="{{ gallery[0].alt }}" width="800" height="800">
+        {% else %}
+          <span class="media-placeholder">{{ icon('bag', 72) }}</span>
+        {% endif %}
+      </button>
+      {% if gallery|length > 1 %}
+      <div class="gallery-thumbs" role="group" aria-label="Product images">
+        {% for img in gallery %}
+        <button type="button" class="thumb" data-thumb data-src="{{ img.url }}" data-alt="{{ img.alt }}" aria-current="{{ 'true' if loop.first else 'false' }}" aria-label="Show image {{ loop.index }}">
+          <img src="{{ img.url }}" alt="" width="72" height="72" loading="lazy">
+        </button>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    <div class="buy-box" data-buy-box>
+      {% if product.brand %}<p class="pc-brand">{{ product.brand }}</p>{% endif %}
+      <h1 class="product-title">{{ product.name }}</h1>
+      <a class="rating-link" href="#reviews">
+        {{ stars(summary.average) }}
+        <span>{% if summary.total %}{{ summary.average }} ({{ summary.total }} review{{ '' if summary.total == 1 else 's' }}){% else %}No reviews yet{% endif %}</span>
+      </a>
+
+      <p class="price price-lg">
+        <span class="price-now">{{ product.price|money }}</span>
+        {% if product.compare_at_price and product.compare_at_price > product.price %}
+          <s class="price-old">{{ product.compare_at_price|money }}</s>
+          <span class="badge badge-danger">Save {{ product.discount_percent }}%</span>
+        {% endif %}
+      </p>
+      {% if product.short_description %}<p class="text-muted">{{ product.short_description }}</p>{% endif %}
+
+      {% if stock == 'out_of_stock' %}
+        <p class="stock stock-out">{{ icon('x', 16) }} Out of stock</p>
+      {% elif stock == 'low_stock' %}
+        <p class="stock stock-low">{{ icon('info', 16) }} Only {{ product.stock_quantity }} left</p>
+      {% else %}
+        <p class="stock stock-in">{{ icon('check', 16) }} In stock</p>
+      {% endif %}
+
+      <div class="buy-row">
+        {% if max_qty > 0 %}
+        <div class="qty" data-qty>
+          <button type="button" class="qty-btn" data-qty-minus aria-label="Decrease quantity" disabled>{{ icon('minus', 16) }}</button>
+          <input class="qty-input" type="number" name="quantity" value="1" min="1" max="{{ max_qty }}" inputmode="numeric" data-qty-input aria-label="Quantity">
+          <button type="button" class="qty-btn" data-qty-plus aria-label="Increase quantity"{% if max_qty <= 1 %} disabled{% endif %}>{{ icon('plus', 16) }}</button>
+        </div>
+        {% endif %}
+        <button type="button" class="btn btn-primary btn-lg buy-main" data-add-to-cart data-product-id="{{ product.id }}"{% if max_qty == 0 %} disabled{% endif %}>
+          {{ icon('bag', 18) }} {{ 'Sold out' if max_qty == 0 else 'Add to cart' }}
+        </button>
+        <button type="button" class="icon-btn icon-btn-outline" data-wishlist-toggle data-product-id="{{ product.id }}" data-name="{{ product.name }}" aria-pressed="{{ 'true' if in_wishlist(product.id) else 'false' }}" aria-label="{{ ('Remove ' ~ product.name ~ ' from wishlist') if in_wishlist(product.id) else ('Add ' ~ product.name ~ ' to wishlist') }}">{{ icon('heart', 20) }}</button>
+      </div>
+      {% if max_qty > 0 %}
+      <button type="button" class="btn btn-secondary btn-lg btn-block" data-buy-now data-product-id="{{ product.id }}" data-redirect="{{ safe_url('checkout.index', safe_url('cart.view', '/cart')) }}">Buy now</button>
+      {% endif %}
+
+      <ul class="trust">
+        <li>{{ icon('truck', 18) }} Free shipping over $50</li>
+        <li>{{ icon('refresh', 18) }} 30-day returns</li>
+        <li>{{ icon('shield', 18) }} Secure checkout</li>
+      </ul>
+      <p class="text-muted sku">SKU: {{ product.sku }}</p>
+    </div>
+  </div>
+
+  <nav class="anchor-tabs" aria-label="Product sections">
+    <a href="#description">Description</a>
+    {% if product.specs %}<a href="#specs">Specifications</a>{% endif %}
+    <a href="#reviews">Reviews ({{ summary.total }})</a>
+  </nav>
+
+  <section class="product-section" id="description">
+    <h2>Description</h2>
+    <div class="prose pre-line">{% for para in (product.description or product.short_description or '').split('\n\n') %}<p>{{ para }}</p>{% endfor %}</div>
+  </section>
+
+  {% if product.specs and product.specs is mapping %}
+  <section class="product-section" id="specs">
+    <h2>Specifications</h2>
+    <table class="spec-table"><tbody>
+      {% for key, value in product.specs.items() %}<tr><th scope="row">{{ key }}</th><td>{{ value }}</td></tr>{% endfor %}
+      <tr><th scope="row">SKU</th><td>{{ product.sku }}</td></tr>
+    </tbody></table>
+  </section>
+  {% endif %}
+
+  <section class="product-section" id="reviews">
+    <h2>Customer reviews</h2>
+    {% if summary.total %}
+    <div class="review-summary">
+      <div class="review-score">
+        <strong>{{ summary.average }}</strong>
+        {{ stars(summary.average) }}
+        <span class="text-muted">{{ summary.total }} review{{ '' if summary.total == 1 else 's' }}</span>
+      </div>
+      <ul class="dist">
+        {% for row in summary.distribution %}
+        <li><span>{{ row.stars }} star</span><progress class="bar" value="{{ row.percent }}" max="100" aria-label="{{ row.stars }} star reviews: {{ row.count }}"></progress><span class="text-muted">{{ row.count }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <ul class="review-list">
+      {% for r in reviews %}
+      <li class="review">
+        <div class="review-head">{{ stars(r.rating) }}<strong>{{ r.title or 'Review' }}</strong></div>
+        {% if r.content %}<p>{{ r.content }}</p>{% endif %}
+        <p class="text-muted review-meta">{{ r.user.public_name }} &middot; {{ r.created_at.strftime('%b %d, %Y') }}{% if r.is_verified_purchase %} &middot; <span class="badge badge-success">Verified purchase</span>{% endif %}</p>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="text-muted">No reviews yet. Only customers who bought this product can review it.</p>
+    {% endif %}
+  </section>
+</div>
+
+{{ product_section('You may also like', 'Related products', related, url_for('shop.category', slug=product.category.slug)) }}
+{{ product_section('Pick up where you left off', 'Recently viewed', recently_viewed) }}
+
+<div class="sticky-buy" data-sticky-buy>
+  <div class="sticky-info"><strong>{{ product.price|money }}</strong><span class="text-muted">{{ product.name }}</span></div>
+  <button type="button" class="btn btn-primary" data-add-to-cart data-product-id="{{ product.id }}"{% if max_qty == 0 %} disabled{% endif %}>{{ 'Sold out' if max_qty == 0 else 'Add to cart' }}</button>
+</div>
+
+<dialog class="modal lightbox" id="lightbox" aria-label="Product image">
+  <div class="modal-panel">
+    <button type="button" class="icon-btn lightbox-close" data-modal-close aria-label="Close image">{{ icon('x') }}</button>
+    <img src="" alt="" width="800" height="800">
+  </div>
+</dialog>
+{% endblock %}
+{% block scripts %}<script type="module" src="{{ asset('js/product.js') }}"></script>{% endblock %}

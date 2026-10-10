@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% from "partials/_product_section.html" import product_section %}
+{% block title %}{% if q %}Search: {{ q }}{% else %}Search{% endif %} &middot; {{ STORE_NAME }}{% endblock %}
+{% block head_extra %}<meta name="robots" content="noindex, follow">{% endblock %}
+{% block content %}
+<div class="container section">
+  <ol class="breadcrumbs">
+    <li><a href="{{ url_for('main.index') }}">Home</a></li>
+    <li aria-current="page">Search</li>
+  </ol>
+
+  {% if not q %}
+    <div class="empty-state card">
+      <div class="empty-icon">{{ icon('search', 32) }}</div>
+      <h1>Search our store</h1>
+      <p>Type a product name, brand, category or SKU in the search box above.</p>
+      {% if nav_categories %}
+      <div class="chips chips-center">
+        {% for c in nav_categories %}<a class="chip" href="{{ url_for('shop.category', slug=c.slug) }}">{{ c.name }}</a>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  {% else %}
+    <div class="listing-head">
+      <h1>{% if products.total %}Results for &ldquo;{{ q }}&rdquo;{% else %}No results for &ldquo;{{ q }}&rdquo;{% endif %}</h1>
+    </div>
+
+    {% if products.total or active_count %}
+    <div class="shop-layout">
+      {% include "shop/_filters.html" %}
+      <div class="shop-main">
+        {% include "shop/_toolbar.html" %}
+        {% include "shop/_listing.html" %}
+      </div>
+    </div>
+    {% else %}
+    <div class="empty-state card">
+      <div class="empty-icon">{{ icon('search', 32) }}</div>
+      <h2>We couldn't find anything for &ldquo;{{ q }}&rdquo;</h2>
+      <ul class="tips">
+        <li>Check the spelling or try a more general word.</li>
+        <li>Search by brand, category or SKU.</li>
+        <li>Use fewer keywords.</li>
+      </ul>
+      {% if nav_categories %}
+      <p>Or browse a category:</p>
+      <div class="chips chips-center">
+        {% for c in nav_categories %}<a class="chip" href="{{ url_for('shop.category', slug=c.slug) }}">{{ c.name }}</a>{% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {{ product_section('Popular right now', 'Best sellers', best_sellers) }}
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}
+{% block scripts %}{% if q and products is not none and (products.total or active_count) %}<script type="module" src="{{ asset('js/filters.js') }}"></script>{% endif %}{% endblock %}
