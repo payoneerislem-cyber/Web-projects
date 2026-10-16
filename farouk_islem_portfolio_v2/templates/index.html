@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b0d12">
+  <meta name="description" content="الموقع الشخصي لفاروق إسلام، مطوّر ويب ومهتم بالذكاء الاصطناعي.">
+  <title>Farouk Islem | مطوّر ويب</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="site-header">
+  <nav class="nav container">
+    <a class="brand" href="#home" aria-label="الصفحة الرئيسية"><span class="brand-symbol">F<span>.</span></span><span class="brand-name">FAROUK <i>/ ISLEM</i></span></a>
+    <button class="menu-toggle" aria-label="فتح القائمة" aria-expanded="false">☰</button>
+    <div class="nav-links">
+      <a href="#about">من أنا</a>
+      <a href="#services">ما أقدّمه</a>
+      <a href="#projects">أعمالي</a>
+      <a class="nav-cta" href="#contact">تواصل معي <span>↗</span></a>
+    </div>
+  </nav>
+</header>
+
+<main>
+<section class="hero container" id="home">
+  <div class="hero-copy reveal">
+    <div class="availability"><span></span> أستقبل حاليًا مشاريع جديدة</div>
+    <p class="hello">مرحبًا، أنا فاروق إسلام</p>
+    <h1>أبني حضورك<br><span>الرقمي باحتراف.</span></h1>
+    <p class="hero-description">أصمّم وأطوّر مواقع ويب حديثة تساعد أصحاب المشاريع والأنشطة التجارية على عرض خدماتهم بوضوح، والوصول إلى عملائهم، وبناء حضور رقمي يترك انطباعًا مميزًا.</p>
+    <div class="hero-actions">
+      <a class="button button-primary" href="#contact">لديك مشروع؟ لنتحدث <span>↗</span></a>
+      <a class="button button-secondary" href="#projects">شاهد أعمالي <span>↓</span></a>
+    </div>
+    <div class="hero-trust"><span class="trust-line"></span><span>مواقع شخصية وتجارية</span><span class="trust-dot">·</span><span>تطبيقات ويب</span><span class="trust-dot">·</span><span>حلول رقمية</span></div>
+  </div>
+  <div class="hero-visual reveal">
+    <div class="portrait-glow"></div>
+    <div class="portrait-shell">
+      {% if profile_image %}
+      <img src="{{ url_for('static', filename='images/' + profile_image) }}" alt="صورة فاروق إسلام">
+      {% endif %}
+      <div class="portrait-shade"></div>
+      <div class="portrait-label"><span class="label-dot"></span><div><strong>Farouk Islem</strong><small>Web Developer · AI</small></div></div>
+    </div>
+    <div class="floating-chip chip-one"><span class="chip-icon purple">✳</span><div><b>تجربة مستخدم</b><small>واضحة وسلسة</small></div></div>
+    <div class="floating-chip chip-two"><span class="chip-icon mint">⌘</span><div><b>تطوير ويب</b><small>من الفكرة إلى الإطلاق</small></div></div>
+    <div class="visual-index">01 <span>—</span> INTRODUCTION</div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="container trust-inner"><span>أركّز على</span><b>تصميم متجاوب</b><i></i><b>سرعة وتجربة سلسة</b><i></i><b>كود قابل للتطوير</b><i></i><b>تواصل واضح</b></div>
+</section>
+
+<section class="section container about-section" id="about">
+  <div class="section-side reveal"><p class="section-index">01 / من أنا</p><h2>أحوّل فكرتك<br>إلى تجربة <span>رقمية.</span></h2></div>
+  <div class="about-body reveal"><p>{{ profile.about }}</p><p class="about-sub">هدفي أن يحصل الزائر على ما جاء من أجله بسهولة، وأن يحصل صاحب المشروع على موقع يخدم أهدافه فعلًا — وليس مجرد شكل جميل.</p><div class="about-points"><div><span>↗</span><p><b>وضوح من البداية</b><small>نفهم هدف المشروع والجمهور المستهدف.</small></p></div><div><span>✳</span><p><b>اهتمام بالتفاصيل</b><small>تصميم مرتب على الهاتف والحاسوب.</small></p></div><div><span>⌁</span><p><b>قابلية للتطوير</b><small>بنية يمكن تحسينها مع نمو احتياجاتك.</small></p></div></div></div>
+</section>
+
+<section class="services-section" id="services"><div class="container section">
+  <div class="section-top reveal"><div><p class="section-index">02 / ما أقدّمه</p><h2>كيف يمكنني <span>مساعدتك؟</span></h2></div><p>حلول رقمية مصممة حول احتياجك، مع اهتمام بالبساطة والأداء وسهولة الاستخدام.</p></div>
+  <div class="services-grid">
+    {% for title, desc in skills %}
+    <article class="service-card reveal"><span class="service-number">0{{ loop.index }}</span><div class="service-icon">{% if loop.index == 1 %}◫{% elif loop.index == 2 %}⌘{% elif loop.index == 3 %}⌁{% else %}✳{% endif %}</div><h3>{{ title }}</h3><p>{{ desc }}</p><a href="#contact" aria-label="استفسر عن {{ title }}">لنتحدث عن احتياجك <span>↗</span></a></article>
+    {% endfor %}
+  </div>
+</div></section>
+
+<section class="section container projects-section" id="projects">
+  <div class="section-top reveal"><div><p class="section-index">03 / أعمال مختارة</p><h2>أفكار تحوّلت إلى <span>مشاريع.</span></h2></div><p>نماذج من مساحة عملي. اختر المشروع لمعرفة المزيد أو تواصل معي لمناقشة فكرتك.</p></div>
+  <div class="projects-grid">
+    {% for project in projects if project.title != "مشروعك القادم" %}
+    <article class="project-card reveal">
+      <div class="project-art art-{{ loop.index }}"><span class="art-no">0{{ loop.index }}</span><div class="art-shape shape-a"></div><div class="art-shape shape-b"></div><div class="art-monogram">{% if loop.index == 1 %}K<span>.</span>{% elif loop.index == 2 %}L<span>✳</span>{% else %}+{% endif %}</div><span class="project-status">{{ project.status }}</span></div>
+      <div class="project-details"><p class="project-category">{{ project.category }}</p><h3>{{ project.title }}</h3><p class="project-description">{{ project.description }}</p><div class="project-tags">{% for tag in project.stack %}<span>{{ tag }}</span>{% endfor %}</div>
+      {% if project.url %}<a class="project-action" href="{{ project.url }}" target="_blank" rel="noopener noreferrer">استكشف المشروع <span>↗</span></a>{% else %}<span class="project-action project-action-muted">تفاصيل المشروع عند الطلب <span>↗</span></span>{% endif %}
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="contact-section" id="contact"><div class="container contact-box reveal">
+  <div class="contact-orb"></div><p class="section-index">04 / الخطوة التالية</p><h2>هل لديك مشروع<br>تريد أن <span>نبدأه؟</span></h2><p class="contact-copy">أخبرني بفكرتك وما تريد تحقيقه. يمكننا مناقشة احتياجك والخطوة المناسبة لمشروعك.</p>
+  <div class="contact-actions"><a class="button button-primary" href="mailto:{{ profile.email }}">ابدأ المحادثة <span>↗</span></a>{% if profile.whatsapp %}<a class="button button-secondary" href="{{ profile.whatsapp }}" target="_blank" rel="noopener noreferrer">تواصل عبر WhatsApp</a>{% endif %}</div>
+  <div class="contact-socials">{% if profile.github %}<a href="{{ profile.github }}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>{% endif %}{% if profile.linkedin %}<a href="{{ profile.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>{% endif %}{% if profile.instagram %}<a href="{{ profile.instagram }}" target="_blank" rel="noopener noreferrer">Instagram ↗</a>{% endif %}</div>
+</div></section>
+</main>
+<footer class="footer"><div class="container footer-inner"><a class="brand" href="#home"><span class="brand-symbol">F<span>.</span></span><span class="brand-name">FAROUK <i>/ ISLEM</i></span></a><p>مواقع وتجارب رقمية تصنع فرقًا.</p><span>© <span id="year"></span> Farouk Islem</span></div></footer>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body></html>
