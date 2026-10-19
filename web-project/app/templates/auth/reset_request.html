@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Reset Password — {{ app_name }}{% endblock %}
+{% block styles %}<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">{% endblock %}
+{% block body_class %}auth-page{% endblock %}
+{% block body %}
+<main class="auth-card">
+    <h1>Reset Password 📩</h1>
+    {% include "components/_flash_messages.html" %}
+
+    <form action="{{ url_for('auth.reset_request') }}" method="post" class="auth-form">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token() }}">
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input id="email" type="email" name="email" placeholder="Enter your registered email" required autocomplete="email">
+        </div>
+        <button type="submit" class="btn btn-danger">Send OTP Code</button>
+    </form>
+
+    <p class="footer-link"><a href="{{ url_for('auth.login') }}">← Back to Login</a></p>
+</main>
+{% endblock %}

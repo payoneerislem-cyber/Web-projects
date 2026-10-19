@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{% block title %}{{ app_name }}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    {% block styles %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+    {% block body %}{% endblock %}
+
+    <script>
+        window.BudgetTracker = {
+            csrfToken: document.querySelector('meta[name="csrf-token"]').content,
+            routes: {
+                addExpense: {{ url_for('api.add_expense')|tojson }},
+                addIncome: {{ url_for('api.add_income')|tojson }},
+                pageData: {{ url_for('api.page_data')|tojson }},
+                budget: {{ url_for('main.budget')|tojson }},
+                login: {{ url_for('auth.login')|tojson }},
+                changePassword: {{ url_for('auth.change_password_route')|tojson }},
+                editExpense: {{ url_for('api.edit_expense', expense_id=0)|tojson }},
+                editIncome: {{ url_for('api.edit_income', income_id=0)|tojson }},
+                deleteExpense: {{ url_for('api.delete_expense', expense_id=0)|tojson }},
+                deleteIncome: {{ url_for('api.delete_income', income_id=0)|tojson }}
+            }
+        };
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Budget Tracker — {{ app_name }}{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+{% endblock %}
+{% block body_class %}dashboard-page{% endblock %}
+{% block body %}
+<main id="app" class="dashboard-shell">
+    {% include "dashboard/budget.html" %}
+</main>
+{% endblock %}
+{% block scripts %}
+<script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

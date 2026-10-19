@@ -1,0 +1,47 @@
+* { box-sizing: border-box; }
+
+html, body { min-height: 100%; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #f4f6f9;
+    color: #2c3e50;
+}
+
+a { color: inherit; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+
+.flash-messages { margin-bottom: 16px; }
+.alert {
+    padding: 11px 13px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    text-align: left;
+}
+.alert-error { background: #fde8e8; color: #c62828; border: 1px solid #f8b4b4; }
+.alert-success { background: #e8f8f0; color: #247a4d; border: 1px solid #a3e9c4; }
+.alert-info { background: #e8f3ff; color: #21618c; border: 1px solid #bcd8f2; }
+
+.btn {
+    width: 100%;
+    border: 0;
+    border-radius: 8px;
+    padding: 12px;
+    color: #fff;
+    font-weight: 700;
+    transition: opacity .2s ease, transform .1s ease;
+}
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.btn-primary { background: #2ecc71; }
+.btn-primary:hover:not(:disabled) { background: #27ae60; }
+.btn-success { background: #2ecc71; }
+.btn-success:hover:not(:disabled) { background: #27ae60; }
+.btn-danger { background: #e74c3c; }
+.btn-danger:hover:not(:disabled) { background: #c0392b; }
+.btn-secondary { background: #6c757d; }
+
+[hidden] { display: none !important; }

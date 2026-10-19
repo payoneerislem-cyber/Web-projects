@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.pytest_cache/
+instance/*
+!instance/.gitkeep
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+!app/static/uploads/default.png
+.DS_Store
+Thumbs.db

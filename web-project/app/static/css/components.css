@@ -1,0 +1,47 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, .6);
+    z-index: 1000;
+}
+
+.modal-content, .confirm-card {
+    width: min(100%, 380px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .2);
+}
+.modal-content { padding: 22px; }
+.confirm-card { padding: 24px; text-align: center; }
+.modal-content h2, .confirm-card h2 { margin-top: 0; }
+.modal-input {
+    width: 100%;
+    padding: 11px;
+    margin: 7px 0 14px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+.modal-actions, .confirm-actions { display: flex; justify-content: flex-end; gap: 10px; }
+.confirm-actions { justify-content: center; }
+.modal-actions .btn, .confirm-actions .btn { width: auto; min-width: 110px; }
+.confirm-icon { font-size: 2rem; margin-bottom: 8px; }
+
+.app-toast {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    max-width: calc(100vw - 40px);
+    padding: 12px 18px;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    z-index: 2000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .15);
+    transition: opacity .3s ease, transform .3s ease;
+}
+.app-toast.success { background: #2ecc71; }
+.app-toast.error { background: #e74c3c; }

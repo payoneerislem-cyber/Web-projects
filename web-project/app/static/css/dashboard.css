@@ -1,0 +1,141 @@
+.dashboard-page {
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.dashboard-shell {
+    width: min(100%, 520px);
+    margin: 0 auto;
+}
+
+.dashboard-card {
+    width: 100%;
+    padding: 28px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, .08);
+}
+
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.profile-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #2ecc71;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .1);
+}
+.upload-form { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; }
+input[type="file"] { display: none; }
+.custom-file-upload, .upload-btn {
+    border: 0;
+    padding: 7px 12px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 13px;
+}
+.custom-file-upload { background: #3498db; cursor: pointer; }
+.upload-btn { background: #2ecc71; cursor: pointer; }
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.dashboard-header h1 { margin: 0; font-size: 25px; }
+.username-badge {
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: #eef6ff;
+    color: #2471a3;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.budget-box {
+    color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    text-align: center;
+    font-size: 23px;
+    font-weight: 700;
+    transition: background-color .3s ease;
+}
+#currentBudget { font-size: 30px; }
+
+.transaction-form { margin-bottom: 20px; }
+.transaction-form input,
+.search-input {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 11px;
+    border: 1px solid #ddd;
+    border-radius: 7px;
+    outline: none;
+}
+.transaction-form input:focus,
+.search-input:focus { border-color: #3498db; }
+.status-message { min-height: 20px; margin: 6px 0 0; font-size: 14px; font-weight: 700; text-align: center; }
+.section-divider { border: 0; border-top: 1px solid #eee; margin: 25px 0; }
+.section-title { margin: 0 0 12px; font-size: 18px; }
+.income-title { color: #27ae60; }
+.expense-title { color: #c0392b; }
+
+.transaction-list { list-style: none; padding: 0; margin: 0 0 22px; }
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 14px;
+    padding: 11px;
+    margin-bottom: 8px;
+    border-radius: 7px;
+    background: #f9f9f9;
+    border-left: 4px solid;
+}
+.income-item { border-left-color: #2ecc71; }
+.expense-item { border-left-color: #e74c3c; }
+.transaction-item small { color: #888; }
+.item-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.item-actions a { text-decoration: none; }
+.item-actions a:hover { transform: scale(1.08); }
+
+.search-input { margin-top: 5px; }
+.dashboard-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+}
+.nav-link { color: #2196f3; font-weight: 700; text-decoration: none; }
+.nav-link:hover { text-decoration: underline; }
+.inline-form { display: inline; margin: 0; }
+.logout-link { padding: 0; border: 0; background: transparent; color: #f44336; font-weight: 700; }
+.logout-link:hover { text-decoration: underline; }
+
+.settings-card { width: 100%; }
+.settings-card h2 { margin-top: 0; }
+.settings-form .btn { margin-top: 4px; }
+.back-link { display: inline-block; margin-top: 18px; color: #777; text-decoration: none; font-size: 14px; }
+.back-link:hover { color: #333; }
+
+@media (max-width: 520px) {
+    .dashboard-page { padding: 10px; }
+    .dashboard-card { padding: 20px; }
+    .dashboard-header { align-items: flex-start; flex-direction: column; }
+}
+.skeleton { border-radius: 10px; background: linear-gradient(90deg, #edf0f2 25%, #f7f8f9 50%, #edf0f2 75%); background-size: 200% 100%; animation: skeleton 1.2s infinite; }
+.skeleton-title { width: 60%; height: 40px; margin-bottom: 15px; }
+.skeleton-panel { width: 100%; height: 220px; }
+@keyframes skeleton { to { background-position: -200% 0; } }
