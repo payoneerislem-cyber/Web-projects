@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#1b2926">
+  <meta name="description" content="NOOR Studio — نموذج تجريبي لحجز مواعيد العناية والتصفيف.">{% if request.path.startswith('/admin') or request.path.startswith('/booking/') %}<meta name="robots" content="noindex,nofollow">{% endif %}
+  <title data-ar="NOOR Studio | وقت مخصص لك" data-en="NOOR Studio | Time set aside for you">NOOR Studio | وقت مخصص لك</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml"><link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}"><script defer src="{{ url_for('static', filename='js/site.js') }}"></script>
+</head>
+<body>
+  <div class="demo-strip"><span data-ar="مشروع تجريبي — أسماء الفريق والأسعار والمواعيد افتراضية" data-en="Portfolio demo — team names, prices and appointments are sample data">مشروع تجريبي — أسماء الفريق والأسعار والمواعيد افتراضية</span></div>
+  <header class="site-header"><div class="container nav-wrap">
+    <a href="{{ url_for('index') }}" class="brand"><span class="brand-mark"><span></span><span></span></span><span><strong data-ar="{{ studio_name }}" data-en="{{ studio_name }}">{{ studio_name }}</strong><small data-ar="عناية وتصفيف" data-en="GROOMING & STYLE">عناية وتصفيف</small></span></a>
+    <button type="button" class="menu-toggle" aria-label="Open navigation" aria-expanded="false" data-menu-toggle><span></span><span></span></button>
+    <nav class="main-nav" data-menu><a href="{{ url_for('index') }}#services" data-ar="الخدمات" data-en="Services">الخدمات</a><a href="{{ url_for('index') }}#team" data-ar="الفريق" data-en="Our team">الفريق</a><a href="{{ url_for('index') }}#visit" data-ar="معلومات الزيارة" data-en="Visit us">معلومات الزيارة</a><a href="{{ url_for('index') }}#faq" data-ar="الأسئلة الشائعة" data-en="FAQ">الأسئلة الشائعة</a></nav>
+    <div class="nav-actions"><button type="button" class="language-toggle" data-language-toggle>English</button><a href="#book" class="button button-small button-dark"><span data-ar="احجز موعدًا" data-en="Book a visit">احجز موعدًا</span><span aria-hidden="true">↗</span></a></div>
+  </div></header>
+  <main id="main-content">
+  {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}<div class="container flash-stack">{% for category, message in messages %}<div class="flash flash-{{ category }}" role="status">{{ message }}</div>{% endfor %}</div>{% endif %}{% endwith %}
+  {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer"><div class="container footer-main"><div class="footer-brand"><a href="{{ url_for('index') }}" class="brand brand-light"><span class="brand-mark"><span></span><span></span></span><span><strong data-ar="{{ studio_name }}" data-en="{{ studio_name }}">{{ studio_name }}</strong><small data-ar="عناية وتصفيف" data-en="GROOMING & STYLE">عناية وتصفيف</small></span></a><p data-ar="موعدك مساحتك الخاصة — عناية بالتفاصيل ووقت محسوب لك." data-en="Your appointment, your own space — thoughtful details and time set aside for you.">موعدك مساحتك الخاصة — عناية بالتفاصيل ووقت محسوب لك.</p></div><div class="footer-links"><strong data-ar="استكشف" data-en="Explore">استكشف</strong><a href="{{ url_for('index') }}#services" data-ar="الخدمات" data-en="Services">الخدمات</a><a href="{{ url_for('index') }}#team" data-ar="الفريق" data-en="Our team">الفريق</a><a href="{{ url_for('index') }}#book" data-ar="الحجز" data-en="Booking">الحجز</a><a href="{{ url_for('privacy') }}" data-ar="الخصوصية" data-en="Privacy">الخصوصية</a></div><div class="footer-links"><strong data-ar="معلومات الاستوديو" data-en="Studio details">معلومات الاستوديو</strong><span>{{ public_city }}</span><a href="tel:{{ public_phone|replace(' ', '') }}">{{ public_phone }}</a><a href="mailto:{{ public_email }}">{{ public_email }}</a></div></div><div class="container footer-bottom"><span>© {{ now_date[:4] }} {{ studio_name }}</span><span data-ar="موقع تجريبي — عدّل بيانات النشاط قبل استقبال حجوزات حقيقية." data-en="Portfolio demo — replace studio details before accepting real bookings.">موقع تجريبي — عدّل بيانات النشاط قبل استقبال حجوزات حقيقية.</span><a class="admin-link" href="{{ url_for('admin_login') }}" data-ar="إدارة الحجوزات" data-en="Booking admin">إدارة الحجوزات</a></div></footer>
+</body></html>

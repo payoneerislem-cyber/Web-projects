@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#14251f">
+  <meta name="description" content="MADAR Services — نموذج تجريبي لخدمات العناية بالمنازل والمساحات التجارية.">{% if request.path.startswith('/admin') %}<meta name="robots" content="noindex,nofollow">{% endif %}
+  <title data-ar="مَدار | العناية بمساحتك" data-en="MADAR | Care for your space">مَدار | العناية بمساحتك</title>
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  <script defer src="{{ url_for('static', filename='js/site.js') }}"></script>
+</head>
+<body>
+  <div class="demo-strip"><span data-ar="نسخة عرض تجريبي — جميع بيانات النشاط افتراضية" data-en="Portfolio demo — all business details are sample data">نسخة عرض تجريبي — جميع بيانات النشاط افتراضية</span></div>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="{{ url_for('index') }}" aria-label="MADAR home"><span class="brand-symbol">م</span><span><strong data-ar="{{ business_name_ar }}" data-en="{{ business_name_en }}">{{ business_name_ar }}</strong><small data-ar="خدمات المساحات" data-en="SPACE SERVICES">خدمات المساحات</small></span></a>
+      <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" data-menu-toggle><span></span><span></span></button>
+      <nav class="main-nav" data-menu>
+        <a href="{{ url_for('index') }}#services" data-ar="الخدمات" data-en="Services">الخدمات</a>
+        <a href="{{ url_for('index') }}#process" data-ar="آلية العمل" data-en="How it works">آلية العمل</a>
+        <a href="{{ url_for('index') }}#faq" data-ar="الأسئلة الشائعة" data-en="FAQ">الأسئلة الشائعة</a>
+        <a href="{{ url_for('request_quote') }}" data-ar="طلب عرض سعر" data-en="Request an estimate">طلب عرض سعر</a>
+      </nav>
+      <div class="nav-actions"><button type="button" class="language-toggle" data-language-toggle>English</button><a class="button button-small button-dark" href="{{ url_for('request_quote') }}"><span data-ar="ابدأ طلبك" data-en="Get started">ابدأ طلبك</span><span aria-hidden="true">↗</span></a></div>
+    </div>
+  </header>
+  <main id="main-content">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}<div class="container flash-stack">{% for category, message in messages %}<div class="flash flash-{{ category }}" role="status">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand"><a class="brand brand-light" href="{{ url_for('index') }}"><span class="brand-symbol">م</span><span><strong data-ar="{{ business_name_ar }}" data-en="{{ business_name_en }}">{{ business_name_ar }}</strong><small data-ar="خدمات المساحات" data-en="SPACE SERVICES">خدمات المساحات</small></span></a><p data-ar="عناية عملية بمساحاتك، مع وضوح في التفاصيل من أول تواصل." data-en="Practical care for your space, with clarity from the first conversation.">عناية عملية بمساحاتك، مع وضوح في التفاصيل من أول تواصل.</p></div>
+      <div class="footer-links"><strong data-ar="استكشف" data-en="Explore">استكشف</strong><a href="{{ url_for('index') }}#services" data-ar="الخدمات" data-en="Services">الخدمات</a><a href="{{ url_for('index') }}#process" data-ar="آلية العمل" data-en="How it works">آلية العمل</a><a href="{{ url_for('request_quote') }}" data-ar="طلب عرض سعر" data-en="Request an estimate">طلب عرض سعر</a><a href="{{ url_for('privacy') }}" data-ar="الخصوصية" data-en="Privacy">الخصوصية</a></div>
+      <div class="footer-links"><strong data-ar="التواصل" data-en="Contact">التواصل</strong><span>{{ public_city }}</span><a href="tel:{{ public_phone|replace(' ', '') }}">{{ public_phone }}</a><a href="mailto:{{ public_email }}">{{ public_email }}</a></div>
+    </div>
+    <div class="container footer-bottom"><span>© {{ now_date[:4] }} {{ business_name_en }}</span><span data-ar="مشروع تجريبي لأغراض العرض — استبدل بيانات النشاط قبل النشر التجاري." data-en="Portfolio demo — replace sample business details before commercial launch.">مشروع تجريبي لأغراض العرض — استبدل بيانات النشاط قبل النشر التجاري.</span><a href="{{ url_for('admin_login') }}" class="admin-link" data-ar="إدارة" data-en="Admin">إدارة</a></div>
+  </footer>
+</body>
+</html>
