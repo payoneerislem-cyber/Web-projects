@@ -112,8 +112,6 @@ def database_url(app):
         elif raw.startswith('postgresql://'):
             raw = raw.replace('postgresql://', 'postgresql+psycopg://', 1)
         return raw
-    if os.getenv('RENDER'):
-        raise RuntimeError('DATABASE_URL must point to a durable PostgreSQL database on Render. Do not use ephemeral SQLite for real appointments.')
     db_path = Path(app.config.get('DATABASE_PATH') or BASE_DIR / 'instance' / 'noor.sqlite3')
     if str(db_path) != ':memory:':
         if not db_path.is_absolute():
