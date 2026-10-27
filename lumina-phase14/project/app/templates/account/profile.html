@@ -1,0 +1,11 @@
+{% extends "account/_base.html" %}
+{% block title %}Profile &middot; {{ STORE_NAME }}{% endblock %}
+{% block account_content %}
+<div class="listing-head"><h1>Profile</h1><a class="btn btn-secondary btn-sm" href="{{ url_for('account.profile_edit') }}">Edit profile</a></div>
+<dl class="card detail-list">
+  <div><dt>Name</dt><dd>{{ current_user.name }}</dd></div>
+  <div><dt>Email</dt><dd>{{ current_user.email }}</dd></div>
+  <div><dt>Phone</dt><dd>{{ current_user.phone or 'Not set' }}</dd></div>
+  <div><dt>Member since</dt><dd>{{ current_user.created_at.strftime('%B %Y') }}</dd></div>
+</dl>
+{% endblock %}

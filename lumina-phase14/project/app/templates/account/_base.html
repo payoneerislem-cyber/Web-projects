@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% set nav = [
+  ('account.dashboard', ['account.dashboard'], 'Overview', 'home'),
+  ('account.orders', ['account.orders', 'account.order_detail'], 'Orders', 'package'),
+  ('account.wishlist', ['account.wishlist'], 'Wishlist', 'heart'),
+  ('account.addresses', ['account.addresses', 'account.address_edit'], 'Addresses', 'truck'),
+  ('account.notifications', ['account.notifications'], 'Notifications', 'info'),
+  ('account.profile', ['account.profile', 'account.profile_edit'], 'Profile', 'user'),
+  ('account.password', ['account.password'], 'Password', 'shield'),
+] %}
+{% block head_extra %}<meta name="robots" content="noindex, nofollow">{% endblock %}
+{% block content %}
+<div class="container section account-layout">
+  <nav class="account-nav" aria-label="Account sections">
+    {% for endpoint, group, label, glyph in nav %}
+    <a href="{{ url_for(endpoint) }}" class="{{ 'is-active' if request.endpoint in group }}"{% if request.endpoint in group %} aria-current="page"{% endif %}>{{ icon(glyph, 18) }} <span>{{ label }}</span>{% if endpoint == 'account.notifications' and unread_notifications %}<span class="badge badge-primary">{{ unread_notifications }}</span>{% endif %}</a>
+    {% endfor %}
+  </nav>
+  <div class="account-main">{% block account_content %}{% endblock %}</div>
+</div>
+{% endblock %}

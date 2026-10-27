@@ -1,0 +1,10 @@
+{% extends "account/_base.html" %}
+{% block title %}Edit address &middot; {{ STORE_NAME }}{% endblock %}
+{% block account_content %}
+<h1>Edit address</h1>
+<form class="card form-narrow" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  {% include "account/_address_fields.html" %}
+  <div class="cluster mt-4"><button type="submit" class="btn btn-primary">Save changes</button><a class="btn btn-ghost" href="{{ url_for('account.addresses') }}">Cancel</a></div>
+</form>
+{% endblock %}

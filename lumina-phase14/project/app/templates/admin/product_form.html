@@ -1,0 +1,44 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/_macros.html" import field %}
+{% block title %}{{ 'Edit' if product else 'New' }} product &middot; Admin{% endblock %}
+{% block admin_content %}
+<ol class="breadcrumbs"><li><a href="{{ url_for('admin.products') }}">Products</a></li><li aria-current="page">{{ product.name if product else 'New product' }}</li></ol>
+<h1>{{ 'Edit product' if product else 'New product' }}</h1>
+<form class="card admin-form" method="post" enctype="multipart/form-data" novalidate>
+  {{ form.hidden_tag() }}
+  <div class="field-row">{{ field(form.name) }}{{ field(form.sku) }}</div>
+  <div class="field-row">{{ field(form.category_id) }}{{ field(form.brand) }}</div>
+  <div class="field-row">{{ field(form.price, hint="In " ~ CURRENCY ~ ", e.g. 19.99") }}{{ field(form.compare_at_price, hint="Shown crossed out; must be higher than the price") }}</div>
+  <div class="field-row">{{ field(form.cost_price) }}{{ field(form.stock_quantity) }}</div>
+  {{ field(form.low_stock_threshold) }}
+  {{ field(form.short_description) }}
+  {{ field(form.description) }}
+  {{ field(form.specs, hint="Example:  Battery life: 30 hours") }}
+
+  <fieldset class="choice-group">
+    <legend>Images</legend>
+    {% if product and product.images %}
+    <ul class="image-grid">
+      {% for img in product.images %}
+      <li><img src="{{ img.url }}" alt="" width="96" height="96" loading="lazy"><label class="check"><input type="checkbox" name="delete_image" value="{{ img.id }}"> Remove</label></li>
+      {% endfor %}
+    </ul>
+    <p class="hint">The first image is the main one.</p>
+    {% endif %}
+    <div class="field{% if form.images.errors %} has-error{% endif %}">
+      <label for="{{ form.images.id }}">{{ form.images.label.text }}</label>
+      {{ form.images(class="input", accept="image/jpeg,image/png,image/webp") }}
+      {% if form.images.errors %}<p class="error" role="alert">{{ form.images.errors[0] }}</p>{% endif %}
+    </div>
+    {{ field(form.image_url) }}
+  </fieldset>
+
+  <div class="check-row">
+    <label class="check">{{ form.is_active() }} {{ form.is_active.label.text }}</label>
+    <label class="check">{{ form.is_featured() }} {{ form.is_featured.label.text }}</label>
+    <label class="check">{{ form.is_new() }} {{ form.is_new.label.text }}</label>
+    <label class="check">{{ form.is_best_seller() }} {{ form.is_best_seller.label.text }}</label>
+  </div>
+  <div class="cluster mt-4"><button type="submit" class="btn btn-primary">{{ 'Save changes' if product else 'Create product' }}</button><a class="btn btn-ghost" href="{{ url_for('admin.products') }}">Cancel</a></div>
+</form>
+{% endblock %}

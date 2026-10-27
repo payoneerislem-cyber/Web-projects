@@ -1,0 +1,28 @@
+{% extends "admin/_layout.html" %}
+{% from "admin/_macros.html" import post_button with context %}
+{% from "partials/_product_card.html" import stars %}
+{% from "partials/_status.html" import status_badge %}
+{% from "partials/_pagination.html" import render_pagination %}
+{% block title %}Reviews &middot; Admin{% endblock %}
+{% block admin_content %}
+<h1>Reviews</h1>
+<form class="admin-filters" method="get">
+  <input class="input input-sm" type="search" name="q" value="{{ q }}" placeholder="Product, email or text" aria-label="Search reviews" maxlength="100">
+  <select class="input input-sm" name="status" aria-label="Status"><option value="">All statuses</option>{% for s in statuses %}<option value="{{ s }}"{% if s == status %} selected{% endif %}>{{ s|capitalize }}</option>{% endfor %}</select>
+  <button class="btn btn-secondary btn-sm" type="submit">Filter</button>
+</form>
+{% if reviews.items %}
+<ul class="review-list">{% for r in reviews.items %}
+  <li class="review card">
+    <div class="review-head">{{ stars(r.rating) }}<strong>{{ r.title or 'Review' }}</strong> {{ status_badge(r.status) }}{% if r.is_verified_purchase %} <span class="badge badge-success">Verified</span>{% endif %}</div>
+    {% if r.content %}<p>{{ r.content }}</p>{% endif %}
+    <p class="text-muted review-meta"><a href="{{ url_for('shop.product', slug=r.product.slug) }}" target="_blank" rel="noopener">{{ r.product.name }}</a> &middot; {{ r.user.name }} ({{ r.user.email }}) &middot; {{ r.created_at.strftime('%b %d, %Y') }}</p>
+    <div class="cluster">
+      {% if r.status != 'approved' %}{{ post_button(url_for('admin.review_status', review_id=r.id), 'Approve', 'btn btn-secondary btn-sm', None, {'status': 'approved'}) }}{% endif %}
+      {% if r.status != 'rejected' %}{{ post_button(url_for('admin.review_status', review_id=r.id), 'Reject', 'btn btn-ghost btn-sm', None, {'status': 'rejected'}) }}{% endif %}
+      {{ post_button(url_for('admin.review_delete', review_id=r.id), 'Delete', 'btn btn-ghost btn-sm', 'Delete this review permanently?') }}
+    </div>
+  </li>{% endfor %}</ul>
+{{ render_pagination(reviews, 'admin.reviews', args) }}
+{% else %}<div class="empty-state card"><h2>No reviews found</h2></div>{% endif %}
+{% endblock %}

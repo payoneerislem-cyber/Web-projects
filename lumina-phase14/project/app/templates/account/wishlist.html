@@ -1,0 +1,24 @@
+{% extends "account/_base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% from "partials/_product_card.html" import product_card %}
+{% block title %}My wishlist &middot; {{ STORE_NAME }}{% endblock %}
+{% block account_content %}
+<div data-wishlist-page>
+  <div class="listing-head">
+    <h1>My wishlist</h1>
+    {% if products %}<p class="text-muted" data-wishlist-count>{{ products|length }} item{{ '' if products|length == 1 else 's' }}</p>{% endif %}
+  </div>
+  {% if products %}
+  <div class="product-grid product-grid-account">
+    {% for p in products %}{{ product_card(p, true) }}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state card">
+    <div class="empty-icon">{{ icon('heart', 32) }}</div>
+    <h2>Your wishlist is empty</h2>
+    <p>Tap the heart on any product to save it here for later.</p>
+    <div class="cluster"><a class="btn btn-primary btn-lg" href="{{ safe_url('shop.index', '/shop') }}">Browse products</a></div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

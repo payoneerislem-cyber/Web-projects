@@ -1,0 +1,39 @@
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <a class="brand" href="{{ url_for('main.index') }}">
+        <svg class="brand-mark" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="currentColor"/><path d="M11 9v14h10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span>{{ STORE_NAME }}</span>
+      </a>
+      <p>Thoughtfully selected products, fast delivery and easy returns.</p>
+    </div>
+    <nav class="footer-col" aria-label="Shop">
+      <h3>Shop</h3>
+      <ul>
+        <li><a href="{{ safe_url('shop.index', '/shop') }}">All products</a></li>
+        {% for c in nav_categories[:4] %}
+        <li><a href="{{ safe_url('shop.category', '/category/' ~ c.slug, slug=c.slug) }}">{{ c.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </nav>
+    <nav class="footer-col" aria-label="Support">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="{{ safe_url('main.about', '/about') }}">About us</a></li>
+        <li><a href="{{ safe_url('main.contact', '/contact') }}">Contact</a></li>
+        <li><a href="{{ safe_url('main.faq', '/faq') }}">FAQ</a></li>
+      </ul>
+    </nav>
+    <nav class="footer-col" aria-label="Legal">
+      <h3>Legal</h3>
+      <ul>
+        <li><a href="{{ safe_url('main.terms', '/terms') }}">Terms &amp; Conditions</a></li>
+        <li><a href="{{ safe_url('main.privacy', '/privacy') }}">Privacy Policy</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="container footer-bottom">
+    <span>&copy; {{ current_year }} {{ STORE_NAME }}. All rights reserved.</span>
+    <span>Demo store &mdash; no real payments.</span>
+  </div>
+</footer>

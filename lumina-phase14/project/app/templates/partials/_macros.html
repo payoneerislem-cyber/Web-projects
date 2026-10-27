@@ -1,0 +1,14 @@
+{# Renders one WTForms field with label, hint and accessible error messages. #}
+{% macro field(f, autocomplete=None, hint=None) %}
+{% set attrs = {"class": "input"} %}
+{% if autocomplete %}{% set _ = attrs.update({"autocomplete": autocomplete}) %}{% endif %}
+{% if f.errors %}{% set _ = attrs.update({"aria-invalid": "true", "aria-describedby": f.id ~ "-error"}) %}{% endif %}
+<div class="field{% if f.errors %} has-error{% endif %}">
+  {{ f.label }}
+  {{ f(**attrs) }}
+  {% if hint %}<small class="hint">{{ hint }}</small>{% endif %}
+  {% if f.errors %}
+  <p class="error" id="{{ f.id }}-error" role="alert">{{ f.errors[0] }}</p>
+  {% endif %}
+</div>
+{% endmacro %}

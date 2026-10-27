@@ -1,0 +1,48 @@
+{% extends "admin/_layout.html" %}
+{% from "admin/_macros.html" import post_button with context %}
+{% from "partials/_pagination.html" import render_pagination %}
+{% block title %}Products &middot; Admin{% endblock %}
+{% block admin_content %}
+<div class="listing-head"><h1>Products</h1><a class="btn btn-primary btn-sm" href="{{ url_for('admin.product_new') }}">Add product</a></div>
+<form class="admin-filters" method="get">
+  <input class="input input-sm" type="search" name="q" value="{{ q }}" placeholder="Name, SKU or brand" aria-label="Search products" maxlength="100">
+  <select class="input input-sm" name="status" aria-label="Status">
+    {% for value, label in [('', 'All (not deleted)'), ('active', 'Active'), ('inactive', 'Inactive'), ('low', 'Low stock'), ('deleted', 'Deleted')] %}<option value="{{ value }}"{% if value == status %} selected{% endif %}>{{ label }}</option>{% endfor %}
+  </select>
+  <select class="input input-sm" name="category" aria-label="Category">
+    <option value="">All categories</option>
+    {% for c in categories %}<option value="{{ c.id }}"{% if c.id == category_id %} selected{% endif %}>{{ c.name }}</option>{% endfor %}
+  </select>
+  <button class="btn btn-secondary btn-sm" type="submit">Filter</button>
+</form>
+{% if products.items %}
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Flags</th><th>Actions</th></tr></thead>
+  <tbody>
+  {% for p in products.items %}
+  <tr>
+    <td><div class="cell-product"><span class="mini-img">{% if p.image_url %}<img src="{{ p.image_url }}" alt="" width="40" height="40" loading="lazy">{% endif %}</span><span><a href="{{ url_for('admin.product_edit', product_id=p.id) }}"><strong>{{ p.name }}</strong></a><br><small class="text-muted">{{ p.sku }}</small></span></div></td>
+    <td>{{ p.category.name }}</td>
+    <td>{{ p.price|money }}</td>
+    <td><span class="badge {{ {'in_stock': 'badge-success', 'low_stock': 'badge-warning', 'out_of_stock': 'badge-danger'}[p.stock_status] }}">{{ p.stock_quantity }}</span></td>
+    <td class="cell-flags">
+      {% if p.deleted_at %}<span class="badge badge-danger">Deleted</span>{% else %}
+      {{ post_button(url_for('admin.product_toggle', product_id=p.id), 'Active' if p.is_active else 'Inactive', 'badge badge-btn ' ~ ('badge-success' if p.is_active else ''), None, {'field': 'active'}) }}
+      {{ post_button(url_for('admin.product_toggle', product_id=p.id), 'Featured', 'badge badge-btn ' ~ ('badge-primary' if p.is_featured else ''), None, {'field': 'featured'}) }}
+      {{ post_button(url_for('admin.product_toggle', product_id=p.id), 'New', 'badge badge-btn ' ~ ('badge-primary' if p.is_new else ''), None, {'field': 'new'}) }}
+      {{ post_button(url_for('admin.product_toggle', product_id=p.id), 'Best seller', 'badge badge-btn ' ~ ('badge-primary' if p.is_best_seller else ''), None, {'field': 'best_seller'}) }}
+      {% endif %}
+    </td>
+    <td class="cell-actions">
+      {% if p.deleted_at %}{{ post_button(url_for('admin.product_restore', product_id=p.id), 'Restore', 'btn btn-secondary btn-sm') }}
+      {% else %}<a class="btn btn-secondary btn-sm" href="{{ url_for('admin.product_edit', product_id=p.id) }}">Edit</a>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('shop.product', slug=p.slug) }}" target="_blank" rel="noopener">View</a>
+      {{ post_button(url_for('admin.product_delete', product_id=p.id), 'Delete', 'btn btn-ghost btn-sm', 'Remove ' ~ p.name ~ ' from the store? Past orders keep their details and you can restore it later.') }}{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{{ render_pagination(products, 'admin.products', args) }}
+{% else %}<div class="empty-state card"><h2>No products found</h2><p>Try different filters or add a product.</p></div>{% endif %}
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "admin/_layout.html" %}
+{% from "partials/_macros.html" import field %}
+{% block title %}{{ 'Edit' if category else 'New' }} category &middot; Admin{% endblock %}
+{% block admin_content %}
+<ol class="breadcrumbs"><li><a href="{{ url_for('admin.categories') }}">Categories</a></li><li aria-current="page">{{ category.name if category else 'New category' }}</li></ol>
+<h1>{{ 'Edit category' if category else 'New category' }}</h1>
+<form class="card admin-form form-narrow" method="post" enctype="multipart/form-data" novalidate>
+  {{ form.hidden_tag() }}
+  {{ field(form.name) }}
+  {{ field(form.description) }}
+  {% if category and category.image %}<p><img src="{{ category.image }}" alt="" width="96" height="96" class="thumb-preview"></p>{% endif %}
+  <div class="field{% if form.image.errors %} has-error{% endif %}">
+    <label for="{{ form.image.id }}">{{ form.image.label.text }}</label>
+    {{ form.image(class="input", accept="image/jpeg,image/png,image/webp") }}
+    {% if form.image.errors %}<p class="error" role="alert">{{ form.image.errors[0] }}</p>{% endif %}
+  </div>
+  {{ field(form.image_url) }}
+  <label class="check">{{ form.is_active() }} {{ form.is_active.label.text }}</label>
+  <div class="cluster mt-4"><button type="submit" class="btn btn-primary">Save</button><a class="btn btn-ghost" href="{{ url_for('admin.categories') }}">Cancel</a></div>
+</form>
+{% endblock %}

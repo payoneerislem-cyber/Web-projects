@@ -1,0 +1,25 @@
+{% extends "admin/_layout.html" %}
+{% from "admin/_macros.html" import post_button with context %}
+{% from "partials/_pagination.html" import render_pagination %}
+{% block title %}Coupons &middot; Admin{% endblock %}
+{% block admin_content %}
+<div class="listing-head"><h1>Coupons</h1><a class="btn btn-primary btn-sm" href="{{ url_for('admin.coupon_new') }}">Add coupon</a></div>
+{% if coupons.items %}
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Code</th><th>Discount</th><th>Min. order</th><th>Used</th><th>Expires</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>{% for c in coupons.items %}
+  <tr>
+    <td><strong>{{ c.code }}</strong><br><small class="text-muted">{{ c.description or '' }}</small></td>
+    <td>{% if c.discount_type == 'percentage' %}{{ c.discount_value }}%{% else %}{{ c.discount_value|money }}{% endif %}{% if c.maximum_discount %}<br><small class="text-muted">max {{ c.maximum_discount|money }}</small>{% endif %}</td>
+    <td>{{ c.minimum_order|money if c.minimum_order else '-' }}</td>
+    <td>{{ c.used_count }}{% if c.usage_limit %} / {{ c.usage_limit }}{% endif %}</td>
+    <td>{{ c.expiry_date.strftime('%b %d, %Y') if c.expiry_date else 'Never' }}{% if c.is_expired %} <span class="badge badge-danger">Expired</span>{% endif %}</td>
+    <td><span class="badge {{ 'badge-success' if c.is_active else '' }}">{{ 'Active' if c.is_active else 'Inactive' }}</span></td>
+    <td class="cell-actions"><a class="btn btn-secondary btn-sm" href="{{ url_for('admin.coupon_edit', coupon_id=c.id) }}">Edit</a>
+      {{ post_button(url_for('admin.coupon_toggle', coupon_id=c.id), 'Deactivate' if c.is_active else 'Activate') }}
+      {{ post_button(url_for('admin.coupon_delete', coupon_id=c.id), 'Delete', 'btn btn-ghost btn-sm', 'Delete coupon ' ~ c.code ~ '?') }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{{ render_pagination(coupons, 'admin.coupons', args) }}
+{% else %}<div class="empty-state card"><h2>No coupons yet</h2></div>{% endif %}
+{% endblock %}

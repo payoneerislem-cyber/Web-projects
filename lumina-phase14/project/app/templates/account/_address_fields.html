@@ -1,0 +1,9 @@
+{% from "partials/_macros.html" import field %}
+{{ field(form.label) }}
+{{ field(form.full_name, autocomplete="name") }}
+{{ field(form.phone, autocomplete="tel") }}
+{{ field(form.line1, autocomplete="address-line1") }}
+{{ field(form.line2, autocomplete="address-line2") }}
+<div class="field-row">{{ field(form.city, autocomplete="address-level2") }}{{ field(form.state, autocomplete="address-level1") }}</div>
+<div class="field-row">{{ field(form.postal_code, autocomplete="postal-code") }}{{ field(form.country, autocomplete="country-name") }}</div>
+<label class="check mt-4">{{ form.is_default() }} {{ form.is_default.label.text }}</label>

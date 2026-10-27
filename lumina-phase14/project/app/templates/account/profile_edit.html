@@ -1,0 +1,13 @@
+{% extends "account/_base.html" %}
+{% from "partials/_macros.html" import field %}
+{% block title %}Edit profile &middot; {{ STORE_NAME }}{% endblock %}
+{% block account_content %}
+<h1>Edit profile</h1>
+<form class="card form-narrow" method="post" novalidate>
+  {{ form.hidden_tag() }}
+  {{ field(form.name, autocomplete="name") }}
+  {{ field(form.phone, autocomplete="tel") }}
+  <p class="hint">Your email ({{ current_user.email }}) can't be changed here.</p>
+  <div class="cluster"><button type="submit" class="btn btn-primary">Save changes</button><a class="btn btn-ghost" href="{{ url_for('account.profile') }}">Cancel</a></div>
+</form>
+{% endblock %}

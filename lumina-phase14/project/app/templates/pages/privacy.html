@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy &middot; {{ STORE_NAME }}{% endblock %}
+{% block meta_description %}How {{ STORE_NAME }} collects, uses and protects your personal data.{% endblock %}
+{% block content %}
+<div class="container section">
+  <div class="page-head"><p class="eyebrow">Legal</p><h1>Privacy Policy</h1></div>
+  <div class="note">Sample text for a demo store. Replace it with a policy reviewed by a qualified professional before going live.</div>
+  <div class="prose">
+    <h2>What we collect</h2>
+    <ul>
+      <li>Account details: name, email address and an encrypted (hashed) password.</li>
+      <li>Order details: items, delivery address and phone number.</li>
+      <li>Messages you send through the contact form or newsletter sign-up.</li>
+    </ul>
+    <h2>How we use it</h2>
+    <p>To process and deliver orders, provide support, secure your account and, if you subscribed, send occasional offers.</p>
+    <h2>Cookies</h2>
+    <p>We use essential cookies to keep you logged in and protect forms against forgery. We also store your light/dark theme preference in your browser.</p>
+    <h2>Sharing</h2>
+    <p>We never sell your data. We only share what is needed with delivery and payment providers to fulfil your order.</p>
+    <h2>Your rights</h2>
+    <p>You can view and edit your details in your account, and ask us to delete your data by contacting support.</p>
+    <h2>Security</h2>
+    <p>Passwords are hashed, forms are CSRF-protected and sessions use secure cookies.</p>
+  </div>
+</div>
+{% endblock %}
