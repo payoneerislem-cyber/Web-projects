@@ -1,7 +1,0 @@
-{# Coloured badge for order / payment / review statuses. #}
-{% macro status_badge(status) -%}
-{% set cls = {'pending': 'badge-warning', 'confirmed': 'badge-info', 'processing': 'badge-info', 'shipped': 'badge-primary',
-              'delivered': 'badge-success', 'cancelled': 'badge-danger', 'refunded': '', 'paid': 'badge-success',
-              'failed': 'badge-danger', 'approved': 'badge-success', 'rejected': 'badge-danger'}.get(status, '') -%}
-<span class="badge {{ cls }}">{{ status|capitalize }}</span>
-{%- endmacro %}
