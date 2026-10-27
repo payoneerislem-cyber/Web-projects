@@ -1,0 +1,9 @@
+{# Import with context:  {% from "admin/_macros.html" import post_button with context %} #}
+{% macro post_button(url, label, classes='btn btn-ghost btn-sm', confirm=None, extra=None) -%}
+<form method="post" action="{{ url }}" class="inline-form"{% if confirm %} data-confirm="{{ confirm }}"{% endif %}>
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="next" value="{{ request.full_path.rstrip('?') }}">
+  {% for k, v in (extra or {}).items() %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endfor %}
+  <button type="submit" class="{{ classes }}">{{ label }}</button>
+</form>
+{%- endmacro %}

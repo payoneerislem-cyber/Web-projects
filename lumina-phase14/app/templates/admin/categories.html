@@ -1,0 +1,19 @@
+{% extends "admin/_layout.html" %}
+{% from "admin/_macros.html" import post_button with context %}
+{% block title %}Categories &middot; Admin{% endblock %}
+{% block admin_content %}
+<div class="listing-head"><h1>Categories</h1><a class="btn btn-primary btn-sm" href="{{ url_for('admin.category_new') }}">Add category</a></div>
+{% if categories %}
+<div class="table-wrap"><table class="table">
+  <thead><tr><th>Category</th><th>Products</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>{% for c in categories %}
+  <tr>
+    <td><div class="cell-product"><span class="mini-img">{% if c.image %}<img src="{{ c.image }}" alt="" width="40" height="40" loading="lazy">{% endif %}</span><span><a href="{{ url_for('admin.category_edit', category_id=c.id) }}"><strong>{{ c.name }}</strong></a><br><small class="text-muted">/category/{{ c.slug }}</small></span></div></td>
+    <td>{{ c.products|length }}</td>
+    <td><span class="badge {{ 'badge-success' if c.is_active else '' }}">{{ 'Visible' if c.is_active else 'Hidden' }}</span></td>
+    <td class="cell-actions"><a class="btn btn-secondary btn-sm" href="{{ url_for('admin.category_edit', category_id=c.id) }}">Edit</a>
+      {{ post_button(url_for('admin.category_delete', category_id=c.id), 'Delete', 'btn btn-ghost btn-sm', 'Delete the category ' ~ c.name ~ '?') }}</td>
+  </tr>{% endfor %}</tbody>
+</table></div>
+{% else %}<div class="empty-state card"><h2>No categories yet</h2><p>Create one to start adding products.</p></div>{% endif %}
+{% endblock %}

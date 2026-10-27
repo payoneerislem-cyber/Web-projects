@@ -1,0 +1,62 @@
+{% from "partials/_icons.html" import icon %}
+<div class="filters-overlay" data-filters-close></div>
+<aside class="filters" id="filters" aria-labelledby="filters-title">
+  <div class="filters-head">
+    <h2 id="filters-title">Filters</h2>
+    <button type="button" class="icon-btn filters-close" data-filters-close aria-label="Close filters">{{ icon('x') }}</button>
+  </div>
+  <form id="filters-form" method="get" action="{{ filter_action }}">
+    {% if filters.q %}<input type="hidden" name="q" value="{{ filters.q }}">{% endif %}
+    {% if per_page_arg %}<input type="hidden" name="per_page" value="{{ per_page_arg }}">{% endif %}
+
+    {% if show_category_filter and nav_categories %}
+    <fieldset class="filter-group">
+      <legend>Category</legend>
+      <label class="check"><input type="radio" name="category" value=""{% if not filters.category %} checked{% endif %}> All categories</label>
+      {% for c in nav_categories %}
+      <label class="check"><input type="radio" name="category" value="{{ c.slug }}"{% if filters.category == c.slug %} checked{% endif %}> {{ c.name }}</label>
+      {% endfor %}
+    </fieldset>
+    {% endif %}
+
+    <fieldset class="filter-group">
+      <legend>Price ({{ CURRENCY }})</legend>
+      <div class="price-inputs">
+        <label class="visually-hidden" for="f-min">Minimum price</label>
+        <input id="f-min" class="input" type="number" name="min_price" min="0" step="1" inputmode="decimal" placeholder="Min" value="{{ filters.min_price_str }}">
+        <span aria-hidden="true">&ndash;</span>
+        <label class="visually-hidden" for="f-max">Maximum price</label>
+        <input id="f-max" class="input" type="number" name="max_price" min="0" step="1" inputmode="decimal" placeholder="Max" value="{{ filters.max_price_str }}">
+      </div>
+    </fieldset>
+
+    {% if brands %}
+    <fieldset class="filter-group">
+      <legend>Brand</legend>
+      <div class="filter-scroll">
+        {% for brand, count in brands %}
+        <label class="check"><input type="checkbox" name="brand" value="{{ brand }}"{% if brand in filters.brands %} checked{% endif %}> {{ brand }} <span class="count">({{ count }})</span></label>
+        {% endfor %}
+      </div>
+    </fieldset>
+    {% endif %}
+
+    <fieldset class="filter-group">
+      <legend>Rating</legend>
+      <label class="check"><input type="radio" name="rating" value=""{% if not filters.min_rating %} checked{% endif %}> Any rating</label>
+      {% for stars_min in (4, 3, 2, 1) %}
+      <label class="check"><input type="radio" name="rating" value="{{ stars_min }}"{% if filters.min_rating == stars_min %} checked{% endif %}> {{ stars_min }} stars &amp; up</label>
+      {% endfor %}
+    </fieldset>
+
+    <fieldset class="filter-group">
+      <legend>Availability</legend>
+      <label class="check"><input type="checkbox" name="in_stock" value="1"{% if filters.in_stock %} checked{% endif %}> In stock only</label>
+    </fieldset>
+
+    <div class="filters-actions">
+      <button type="submit" class="btn btn-primary">Apply filters</button>
+      <a class="btn btn-secondary" href="{{ clear_url }}">Clear</a>
+    </div>
+  </form>
+</aside>

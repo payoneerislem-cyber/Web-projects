@@ -1,0 +1,22 @@
+{% extends "account/_base.html" %}
+{% from "partials/_status.html" import status_badge %}
+{% from "partials/_pagination.html" import render_pagination %}
+{% block title %}My orders &middot; {{ STORE_NAME }}{% endblock %}
+{% block account_content %}
+<h1>My orders</h1>
+{% if orders.items %}
+<ul class="order-list">
+  {% for o in orders.items %}
+  <li class="order-row card">
+    <div><a href="{{ url_for('account.order_detail', order_number=o.order_number) }}"><strong>{{ o.order_number }}</strong></a><br><small class="text-muted">{{ o.created_at.strftime('%b %d, %Y') }} &middot; {{ o.item_count }} item{{ '' if o.item_count == 1 else 's' }}</small></div>
+    <div>{{ status_badge(o.status) }} <small class="text-muted">Payment: {{ o.payment_status }}</small></div>
+    <div class="order-total">{{ o.total|money }}</div>
+    <a class="btn btn-secondary btn-sm" href="{{ url_for('account.order_detail', order_number=o.order_number) }}">View</a>
+  </li>
+  {% endfor %}
+</ul>
+{{ render_pagination(orders, 'account.orders') }}
+{% else %}
+<div class="empty-state card"><h2>No orders yet</h2><p>When you place an order it will show up here.</p><div class="cluster"><a class="btn btn-primary" href="{{ safe_url('shop.index', '/shop') }}">Start shopping</a></div></div>
+{% endif %}
+{% endblock %}

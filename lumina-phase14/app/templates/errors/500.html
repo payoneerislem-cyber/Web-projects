@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% from "partials/_icons.html" import icon %}
+{% block title %}500 &middot; {{ STORE_NAME }}{% endblock %}
+{% block content %}
+<section class="container section">
+  <div class="empty-state">
+    <p class="error-code">500</p>
+    <h1>{% if 500 == 404 %}Page not found{% elif 500 == 403 %}Access denied{% else %}Something went wrong{% endif %}</h1>
+    <p>{{ message }}</p>
+    <div class="cluster"><a class="btn btn-primary" href="{{ url_for('main.index') }}">{{ icon('home', 18) }} Back to home</a></div>
+  </div>
+</section>
+{% endblock %}

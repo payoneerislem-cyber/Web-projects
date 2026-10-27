@@ -1,0 +1,26 @@
+{% extends "account/_base.html" %}
+{% from "partials/_pagination.html" import render_pagination %}
+{% block title %}Notifications &middot; {{ STORE_NAME }}{% endblock %}
+{% block account_content %}
+<div class="listing-head">
+  <h1>Notifications</h1>
+  {% if unread_notifications %}
+  <form method="post" action="{{ url_for('account.notifications_read') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit" class="btn btn-secondary btn-sm">Mark all as read</button></form>
+  {% endif %}
+</div>
+{% if notifications.items %}
+<ul class="notice-list">
+  {% for n in notifications.items %}
+  <li class="card notice{{ ' is-unread' if not n.is_read }}">
+    <div><strong>{{ n.title }}</strong>{% if not n.is_read %} <span class="badge badge-primary">New</span>{% endif %}
+      {% if n.message %}<p class="text-muted">{{ n.message }}</p>{% endif %}
+      <small class="text-muted">{{ n.created_at.strftime('%b %d, %Y %H:%M') }}</small></div>
+    {% if n.link and n.link.startswith('/') %}<a class="btn btn-ghost btn-sm" href="{{ n.link }}">View</a>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{{ render_pagination(notifications, 'account.notifications') }}
+{% else %}
+<div class="empty-state card"><h2>No notifications</h2><p>Order updates and account alerts will appear here.</p></div>
+{% endif %}
+{% endblock %}
